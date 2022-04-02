@@ -1,9 +1,13 @@
 import turtle
 
 window = turtle.Screen()
-button_single = turtle.Turtle()
-button_multiplayer = turtle.Turtle()
-clicker = turtle.Turtle()
+
+def create_object():
+	t = turtle.Turtle()
+	t.speed(0)
+	t.penup()
+	t.hideturtle()
+	return t
 
 def start_game():
 	button_single.clear()
@@ -33,6 +37,10 @@ def click(x,y):
 	elif iscollision(clicker, button_multiplayer, 20, 60, 10, 10):
 		window.bgcolor('red')	
 
+
+button_single = create_object()
+button_multiplayer = create_object()
+clicker = create_object()
 start_game()
 window.onclick(click)
 turtle.done()
