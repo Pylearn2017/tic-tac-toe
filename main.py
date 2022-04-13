@@ -1,23 +1,88 @@
 import turtle
 
-def is_solved(board):
-    for i in range(3):
-        if board[0][0] != 0 and board[1][1] != 0:
-            if board[i][0] == board[i][1] == board[i][2]:
-                return board[i][0]
-            if board[0][i] == board[1][i] == board[2][i]:
-                return board[0][i]
-            
-    if board[0][0] == board[1][1] == board[2][2]:
-        return board[0][0]
-    if board[0][2] == board[1][1] == board[2][0]:
-        return board[0][2]
+def main_deagonal_winner_line(obj1, obj2, obj3):
+    print('Победитель ',obj1.value)
+    drawer.width(9)
+    drawer.color('red')
+    drawer.hideturtle()
+    drawer.setposition(obj1.pos())
+    drawer.pendown()
+    drawer.setposition(obj1.xcor()-900, obj1.ycor()+900)
+    drawer.setposition(obj1.xcor()+900, obj1.ycor()-900)
+    drawer.penup()
+    drawer.setposition(obj2.pos())
+    drawer.pendown()
+    drawer.setposition(obj2.xcor()-900, obj2.ycor()+900)
+    drawer.setposition(obj2.xcor()+900, obj2.ycor()-900)
+    drawer.penup()
+    drawer.setposition(obj3.pos())
+    drawer.pendown()
+    drawer.setposition(obj3.xcor()-900, obj3.ycor()+900)
+    drawer.setposition(obj3.xcor()+900, obj3.ycor()-900)
+    drawer.penup()
+
+def horizont_winner_line(obj1, obj2, obj3):
+    print('Победитель ',obj1.value)
+    drawer.width(9)
+    drawer.color('red')
+    drawer.hideturtle()
+    drawer.setposition(obj1.pos())
+    drawer.pendown()
+    drawer.setx(900)
+    drawer.setx(-900)
+    drawer.penup()
+    drawer.setposition(obj2.pos())
+    drawer.pendown()
+    drawer.setx(900)
+    drawer.setx(-900)
+    drawer.penup()
+    drawer.setposition(obj3.pos())
+    drawer.pendown()
+    drawer.setx(900)
+    drawer.setx(-900)
+    drawer.penup()
     
+def vertical_winner_line(obj1, obj2, obj3):
+    print('Победитель ',obj1.value)
+    drawer.width(9)
+    drawer.color('red')
+    drawer.hideturtle()
+    drawer.setposition(obj1.pos())
+    drawer.pendown()
+    drawer.sety(900)
+    drawer.sety(-900)
+    drawer.penup()
+    drawer.setposition(obj2.pos())
+    drawer.pendown()
+    drawer.sety(900)
+    drawer.sety(-900)
+    drawer.penup()
+    drawer.setposition(obj3.pos())
+    drawer.pendown()
+    drawer.sety(900)
+    drawer.sety(-900)
+    drawer.penup()
+    
+def is_solved():
+    board = buttons_game
+    print(board[0][0].value, board[0][1].value, board[0][2].value)
+    print(board[1][0].value, board[1][1].value, board[1][2].value)
+    print(board[2][0].value, board[2][1].value, board[2][2].value)
     for i in range(3):
         for j in range(3):
-            if board[i][j] == 0:
-                return -1
-    return 0
+            if board[0][j].value == board[1][j].value == board[2][j].value:
+                if board[0][j].value != 0:
+                    vertical_winner_line(board[0][j], board[1][j], board[2][j])
+                    return
+            if board[i][0].value == board[i][1].value == board[i][2].value:
+                if board[i][0].value != 0:
+                    horizont_winner_line(board[i][0], board[i][1], board[i][2])
+                    return
+            if board[0][0].value == board[1][1].value == board[2][2].value:
+                if board[1][1].value != 0:
+                    main_deagonal_winner_line(board[0][0], board[1][1], board[2][2])
+                    return
+    return 
 
 
 def create_object():
@@ -102,6 +167,7 @@ def click(x,y):
 				button.value = shape
 				button.shape(button.value)
 				button.stamp()
+				is_solved()
 				button.setposition(9999, 9999)
 	
 
@@ -118,7 +184,7 @@ for row in range(3):
 	row_buttons = []
 	for col in range(3):
 		b = create_object()
-		b.value = ''
+		b.value = 0
 		row_buttons.append(b)
 	buttons_game.append(row_buttons) 
 
