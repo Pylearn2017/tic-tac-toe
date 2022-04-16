@@ -1,5 +1,26 @@
 import turtle
 
+def other_deagonal_winner_line(obj1, obj2, obj3):
+    print('Победитель ',obj1.value)
+    drawer.width(9)
+    drawer.color('red')
+    drawer.hideturtle()
+    drawer.setposition(obj1.pos())
+    drawer.pendown()
+    drawer.setposition(obj1.xcor()-900, obj1.ycor()-900)
+    drawer.setposition(obj1.xcor()+900, obj1.ycor()+900)
+    drawer.penup()
+    drawer.setposition(obj2.pos())
+    drawer.pendown()
+    drawer.setposition(obj2.xcor()-900, obj2.ycor()-900)
+    drawer.setposition(obj2.xcor()+900, obj2.ycor()+900)
+    drawer.penup()
+    drawer.setposition(obj3.pos())
+    drawer.pendown()
+    drawer.setposition(obj3.xcor()-900, obj3.ycor()-900)
+    drawer.setposition(obj3.xcor()+900, obj3.ycor()+900)
+    drawer.penup()
+
 def main_deagonal_winner_line(obj1, obj2, obj3):
     print('Победитель ',obj1.value)
     drawer.width(9)
@@ -82,6 +103,11 @@ def is_solved():
                 if board[1][1].value != 0:
                     main_deagonal_winner_line(board[0][0], board[1][1], board[2][2])
                     return
+            if board[2][0].value == board[1][1].value == board[0][2].value:
+                if board[1][1].value != 0:
+                    other_deagonal_winner_line(board[2][0], board[1][1], board[0][2])
+                    return    
+                
     return 
 
 
