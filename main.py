@@ -1,4 +1,5 @@
 import turtle
+import random
 
 def other_deagonal_winner_line(obj1, obj2, obj3):
     print('Победитель ',obj1.value)
@@ -86,118 +87,191 @@ def vertical_winner_line(obj1, obj2, obj3):
     
 def is_solved():
     board = buttons_game
-    print(board[0][0].value, board[0][1].value, board[0][2].value)
-    print(board[1][0].value, board[1][1].value, board[1][2].value)
-    print(board[2][0].value, board[2][1].value, board[2][2].value)
     for i in range(3):
         for j in range(3):
             if board[0][j].value == board[1][j].value == board[2][j].value:
                 if board[0][j].value != 0:
                     vertical_winner_line(board[0][j], board[1][j], board[2][j])
-                    return
+                    window.game = False
+                    return 
             if board[i][0].value == board[i][1].value == board[i][2].value:
                 if board[i][0].value != 0:
                     horizont_winner_line(board[i][0], board[i][1], board[i][2])
+                    window.game = False
                     return
             if board[0][0].value == board[1][1].value == board[2][2].value:
                 if board[1][1].value != 0:
                     main_deagonal_winner_line(board[0][0], board[1][1], board[2][2])
+                    window.game = False
                     return
             if board[2][0].value == board[1][1].value == board[0][2].value:
                 if board[1][1].value != 0:
                     other_deagonal_winner_line(board[2][0], board[1][1], board[0][2])
-                    return    
-                
-    return 
+                    window.game = False
+                    return
+    values = 0
+    for row in board:
+        for item in row:
+            if item.value:
+                values += 1
+    if values == 9:
+        window.game = False
 
 
 def create_object():
-	t = turtle.Turtle()
-	t.speed(0)
-	t.penup()
-	t.hideturtle()
-	t.setposition(9999, 9999)
-	return t
+    t = turtle.Turtle()
+    t.speed(0)
+    t.penup()
+    t.hideturtle()
+    t.setposition(9999, 9999)
+    return t
+
+def reser_drawer():
+    drawer.color('black')
 
 def start_game():
-	button_single.clear()
-	button_multiplayer.clear()
-	show_button()
+    window.game = True
+    for row in buttons_game:
+        for button in row:
+            button.value = 0
+    clear_window()
+    reser_drawer()
+    show_button()
+    window.update()
 
 def show_button():
-	button_single.showturtle()
-	button_single.shape('square')
-	button_single.shapesize(2,8)
-	button_single.setposition(-200,0)
-	button_multiplayer.showturtle()
-	button_multiplayer.shape('square')
-	button_multiplayer.shapesize(2,8)
-	button_multiplayer.setposition(200,0)
+    button_single.showturtle()
+    button_single.setposition(-260,-50)
+    button_single.write('With frends', font=('Arial', 18, 'normal'))
+    button_single.shape('square')
+    button_single.shapesize(2,8)
+    button_single.setposition(-200,0)
+
+    button_multiplayer.showturtle()
+    button_multiplayer.setposition(125,-50)
+    button_multiplayer.write('With computer', font=('Arial', 18, 'normal'))
+    button_multiplayer.shape('square')
+    button_multiplayer.shapesize(2,8)
+    button_multiplayer.setposition(200,0)
 
 def iscollision(obj1, obj2, w1, w2, h1, h2):
-	if obj1.xcor() + w1 > obj2.xcor() - w2 and obj1.xcor() - w1 < obj2.xcor() + w2:
-		if obj1.ycor() + h1 > obj2.ycor() - h2 and obj1.ycor() - h1 < obj2.ycor() + h2:
-			return True
-	return False
+    if obj1.xcor() + w1 > obj2.xcor() - w2 and obj1.xcor() - w1 < obj2.xcor() + w2:
+        if obj1.ycor() + h1 > obj2.ycor() - h2 and obj1.ycor() - h1 < obj2.ycor() + h2:
+            return True
+    return False
 
 def clear_window():
-	for t in window.turtles():
-		t.clear()
-		t.hideturtle()
-		t.setposition(9999, 9999)
+    for t in window.turtles():
+        t.clear()
+        t.hideturtle()
+        t.setposition(9999, 9999)
 
 def draw_playing_field():
-	drawer.setposition(0,0)
-	drawer.showturtle()
-	drawer.shape('square')
-	drawer.shapesize(30)
-	drawer.stamp()
-	drawer.setposition(9999,9999)
-	x = -220
-	y = 220
-	for button_row in buttons_game:
-		for button in button_row:
-			button.showturtle()
-			button.color('white')
-			button.shape('square')
-			button.shapesize(10)
-			button.setposition(x, y)
-			x += 220
-		y -= 220
-		x = -220
+    drawer.setposition(0,0)
+    drawer.showturtle()
+    drawer.shape('square')
+    drawer.shapesize(30)
+    drawer.stamp()
+    drawer.setposition(9999,9999)
+    x = -220
+    y = 220
+    for button_row in buttons_game:
+        for button in button_row:
+            button.showturtle()
+            button.color('white')
+            button.shape('square')
+            button.shapesize(10)
+            button.setposition(x, y)
+            button.in_field = True
+            x += 220
+        y -= 220
+        x = -220
 
 def menu():
-	if iscollision(clicker, button_single, 20, 60, 10, 10):
-		clear_window()
-		draw_playing_field()
-	elif iscollision(clicker, button_multiplayer, 20, 60, 10, 10):
-		clear_window()
-		draw_playing_field()
+    if iscollision(clicker, button_single, 20, 60, 10, 10):
+        window.game_mode = 'doubles'
+        clear_window()
+        draw_playing_field()
+        window.update()
+
+    elif iscollision(clicker, button_multiplayer, 20, 60, 10, 10):
+        window.game_mode = 'singleplayer'
+        clear_window()
+        draw_playing_field()
+        window.update()
 
 def choice_shape():
-	if clicker.clicks%2 == 0:
-		shape = 'x.gif'
-	else:	
-		shape = 'o.gif'
-	return shape
+    if clicker.clicks%2 == 0:
+        shape = 'x.gif'
+    else:   
+        shape = 'o.gif'
+    return shape
+
+def computer_choice():
+    for button_row in buttons_game:
+        for button in button_row:
+            if button.in_field:
+                if random.choice([True, False]):
+                    clicker.clicks += 1
+                    shape = choice_shape()
+                    button.stamp()
+                    button.value = shape
+                    button.shape(button.value)
+                    button.stamp()
+                    is_solved()
+                    button.in_field = False
+                    button.setposition(9999, 9999)
+                    return
+    else: 
+        computer_choice()
+
 
 def click(x,y):
-	clicker.setposition(x,y)
-	menu()
-	for button_row in buttons_game:
-		for button in button_row:
-			if iscollision(clicker, button, 90, 10, 90, 10):
-				clicker.clicks += 1
-				shape = choice_shape()
-				button.stamp()
-				button.value = shape
-				button.shape(button.value)
-				button.stamp()
-				is_solved()
-				button.setposition(9999, 9999)
-	
+    clicker.setposition(x,y)
+    menu()
+    if window.game:
+        if window.game_mode == 'doubles':
+            for button_row in buttons_game:
+                for button in button_row:
+                    if iscollision(clicker, button, 90, 10, 90, 10):
+                        clicker.clicks += 1
+                        shape = choice_shape()
+                        button.stamp()
+                        button.value = shape
+                        button.shape(button.value)
+                        button.stamp()
+                        is_solved()
+                        button.in_field = False
+                        button.setposition(9999, 9999)
+                        return
+        elif window.game_mode == 'singleplayer':
+            for button_row in buttons_game:
+                for button in button_row:
+                    if iscollision(clicker, button, 90, 10, 90, 10):
+                        clicker.clicks += 1
+                        shape = choice_shape()
+                        button.stamp()
+                        button.value = shape
+                        button.shape(button.value)
+                        button.stamp()
+                        is_solved()
+                        button.in_field = False
+                        button.setposition(9999, 9999) 
+                        computer_choice()
+                        return
+
+
+    else:
+        clear_window()
+        drawer.setposition(-200, 100)
+        drawer.write('Press <Space>', font=('Arial', 48, 'normal'))
+    
+    
 
 window = turtle.Screen()
+window.tracer(0)
+window.game = True
+window.game_mode = ''
 window.register_shape('x.gif')
 window.register_shape('o.gif')
 button_single = create_object()
@@ -207,13 +281,15 @@ clicker.clicks = 0
 drawer = create_object()
 buttons_game = []
 for row in range(3):
-	row_buttons = []
-	for col in range(3):
-		b = create_object()
-		b.value = 0
-		row_buttons.append(b)
-	buttons_game.append(row_buttons) 
+    row_buttons = []
+    for col in range(3):
+        b = create_object()
+        b.value = 0
+        row_buttons.append(b)
+    buttons_game.append(row_buttons) 
 
 start_game()
+window.listen()
+window.onkeypress(start_game, 'space')
 window.onclick(click)
 turtle.done()
