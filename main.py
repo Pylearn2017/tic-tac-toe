@@ -1,5 +1,7 @@
+import os
 import turtle
 import random
+
 
 def other_deagonal_winner_line(obj1, obj2, obj3):
     print('Победитель ',obj1.value)
@@ -85,6 +87,17 @@ def vertical_winner_line(obj1, obj2, obj3):
     drawer.sety(-900)
     drawer.penup()
     
+def is_drow():
+    values = 0
+    for row in buttons_game:
+        for item in row:
+            if item.value:
+                values += 1
+    if values == 9:
+        return True
+    else: 
+        return False
+
 def is_solved():
     board = buttons_game
     for i in range(3):
@@ -109,12 +122,7 @@ def is_solved():
                     other_deagonal_winner_line(board[2][0], board[1][1], board[0][2])
                     window.game = False
                     return
-    values = 0
-    for row in board:
-        for item in row:
-            if item.value:
-                values += 1
-    if values == 9:
+    if is_drow():
         window.game = False
 
 
@@ -200,12 +208,17 @@ def menu():
         draw_playing_field()
         window.update()
 
-def choice_shape():
+def choice_shape(button):
+    shape = path + '\\skins\\standart\\'
     if clicker.clicks%2 == 0:
-        shape = 'x.gif'
+        shape += 'x\\x' + str(random.randint(1,3)) + '.gif'
+        button.shape(shape)
+        return 'x'
     else:   
-        shape = 'o.gif'
-    return shape
+        shape += 'o\\o' + str(random.randint(1,3)) + '.gif'
+        button.shape(shape)
+        return 'o'
+    
 
 def computer_choice():
     for button_row in buttons_game:
@@ -213,17 +226,17 @@ def computer_choice():
             if button.in_field:
                 if random.choice([True, False]):
                     clicker.clicks += 1
-                    shape = choice_shape()
+                    button.stamp()
+                    shape = choice_shape(button)
                     button.stamp()
                     button.value = shape
-                    button.shape(button.value)
-                    button.stamp()
                     is_solved()
                     button.in_field = False
                     button.setposition(9999, 9999)
                     return
     else: 
-        computer_choice()
+        if not is_drow():
+            computer_choice()
 
 
 def click(x,y):
@@ -235,11 +248,10 @@ def click(x,y):
                 for button in button_row:
                     if iscollision(clicker, button, 90, 10, 90, 10):
                         clicker.clicks += 1
-                        shape = choice_shape()
+                        button.stamp()
+                        shape = choice_shape(button)
                         button.stamp()
                         button.value = shape
-                        button.shape(button.value)
-                        button.stamp()
                         is_solved()
                         button.in_field = False
                         button.setposition(9999, 9999)
@@ -249,14 +261,13 @@ def click(x,y):
                 for button in button_row:
                     if iscollision(clicker, button, 90, 10, 90, 10):
                         clicker.clicks += 1
-                        shape = choice_shape()
+                        button.stamp()
+                        shape = choice_shape(button)
                         button.stamp()
                         button.value = shape
-                        button.shape(button.value)
-                        button.stamp()
                         is_solved()
                         button.in_field = False
-                        button.setposition(9999, 9999) 
+                        button.setposition(9999, 9999)
                         computer_choice()
                         return
 
@@ -272,8 +283,16 @@ window = turtle.Screen()
 window.tracer(0)
 window.game = True
 window.game_mode = ''
-window.register_shape('x.gif')
-window.register_shape('o.gif')
+path = os.path.abspath(os.getcwd())
+print(path)
+# C:\Users\1\Documents\Python Scripts\Aleksander L\tic-tac-toe
+# C:\Users\1\Documents\Python Scripts\Aleksander L\tic-tac-toe\skins\standart\x
+window.register_shape(path + '\\skins\\standart\\x\\x1.gif')
+window.register_shape(path + '\\skins\\standart\\o\\o1.gif')
+window.register_shape(path + '\\skins\\standart\\x\\x2.gif')
+window.register_shape(path + '\\skins\\standart\\o\\o2.gif')
+window.register_shape(path + '\\skins\\standart\\x\\x3.gif')
+window.register_shape(path + '\\skins\\standart\\o\\o3.gif')
 button_single = create_object()
 button_multiplayer = create_object()
 clicker = create_object()
