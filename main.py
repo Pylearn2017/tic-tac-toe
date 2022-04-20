@@ -106,24 +106,25 @@ def is_solved():
                 if board[0][j].value != 0:
                     vertical_winner_line(board[0][j], board[1][j], board[2][j])
                     window.game = False
-                    return 
+                    return True
             if board[i][0].value == board[i][1].value == board[i][2].value:
                 if board[i][0].value != 0:
                     horizont_winner_line(board[i][0], board[i][1], board[i][2])
                     window.game = False
-                    return
+                    return True
             if board[0][0].value == board[1][1].value == board[2][2].value:
                 if board[1][1].value != 0:
                     main_deagonal_winner_line(board[0][0], board[1][1], board[2][2])
                     window.game = False
-                    return
+                    return True
             if board[2][0].value == board[1][1].value == board[0][2].value:
                 if board[1][1].value != 0:
                     other_deagonal_winner_line(board[2][0], board[1][1], board[0][2])
                     window.game = False
-                    return
+                    return True
     if is_drow():
         window.game = False
+        return True
 
 
 def create_object():
@@ -265,11 +266,11 @@ def click(x,y):
                         shape = choice_shape(button)
                         button.stamp()
                         button.value = shape
-                        is_solved()
-                        button.in_field = False
-                        button.setposition(9999, 9999)
-                        computer_choice()
-                        return
+                        if not is_solved():
+                            button.in_field = False
+                            button.setposition(9999, 9999)
+                            computer_choice()
+                            return
 
 
     else:
